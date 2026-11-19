@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ViceMode — Play · Vibe · Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060409;--bg2:#0e0915;--card:#120c1b;--card2:#1a1226;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);
+--pink:#ff2bd6;--violet:#8b3dff;--cyan:#22d3ee;--sun:#ff7a59;--text:#f6f2ff;--muted:#a59bbd;--ok:#3ee08f;
+--grad:linear-gradient(90deg,#ff2bd6,#8b3dff);--glow:0 0 22px rgba(255,43,214,.45);--r:16px;--max:1360px;
+--fh:'Archivo',system-ui,sans-serif;--fb:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font:15px/1.6 var(--fb);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+.eyebrow{font:600 12px/1 var(--fb);letter-spacing:.24em;text-transform:uppercase;color:var(--pink)}
+.h1{font:900 clamp(40px,6vw,84px)/.95 var(--fh);text-transform:uppercase;letter-spacing:-.02em}
+.h2{font:900 clamp(28px,3.6vw,46px)/1 var(--fh);text-transform:uppercase;letter-spacing:-.01em}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 30px;border-radius:999px;font:700 13px/1 var(--fb);letter-spacing:.12em;text-transform:uppercase;transition:.25s;border:1.5px solid var(--line2)}
+.btn:hover{border-color:var(--pink);box-shadow:var(--glow)}
+.btn--p{background:var(--grad);border-color:transparent}.btn--p:hover{filter:brightness(1.12)}
+.btn--w{background:#fff;color:#0b0710;border-color:#fff}.btn--w:hover{background:var(--pink);color:#fff;border-color:var(--pink)}
+.btn--block{width:100%}
+/* ticker */
+.ticker{background:var(--grad);overflow:hidden;font:700 11.5px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase}
+.ticker__t{display:flex;gap:56px;padding:10px 0;white-space:nowrap;animation:tk 30s linear infinite;width:max-content}
+@keyframes tk{to{transform:translateX(-50%)}}
+/* header */
+.hdr{position:sticky;top:0;z-index:60;background:rgba(6,4,9,.86);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.hdr__in{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px;height:78px}
+.logo img{height:52px;width:auto;filter:drop-shadow(0 0 10px rgba(255,43,214,.35))}
+.nav{display:flex;justify-content:center;gap:6px}
+.nav>a,.nav>div>button{padding:10px 11px;border-radius:999px;font:600 13px/1 var(--fb);letter-spacing:.1em;text-transform:uppercase;color:#d9d2ea;transition:.2s}
+.nav>a:hover,.nav>div>button:hover{background:var(--card2);color:#fff}
+.mm-wrap{position:static}.mega{position:absolute;left:0;right:0;top:78px;background:#0b0711;border-bottom:1px solid var(--line);opacity:0;visibility:hidden;transform:translateY(-6px);transition:.2s}
+.mm-wrap:hover .mega,.mm-wrap:focus-within .mega{opacity:1;visibility:visible;transform:none}
+.mega__in{display:grid;grid-template-columns:repeat(4,1fr) 1.2fr;gap:28px;padding:34px 28px 38px}
+.mega h5{font:700 12px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.mega ul{list-style:none;display:grid;gap:10px}.mega li a{color:#e8e2f5;font-size:14px}.mega li a:hover{color:var(--pink)}
+.mega__promo{position:relative;border-radius:var(--r);overflow:hidden;min-height:200px}.mega__promo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mega__promo div{position:absolute;inset:auto 0 0 0;padding:18px;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.icons{display:flex;gap:6px;align-items:center}.ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;position:relative;transition:.2s}.ib:hover{background:var(--card2)}
+.badge-n{position:absolute;top:4px;right:2px;background:var(--pink);font:700 10px/18px var(--fb);min-width:18px;height:18px;border-radius:9px;text-align:center;padding:0 4px}
+.burger{display:none}
+/* hero slider */
+.hero{position:relative;height:min(82vh,760px);min-height:560px;overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .9s;display:grid;align-items:center}
+.slide.on{opacity:1;z-index:1}
+.slide>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 7s ease}
+.slide.on>img{transform:scale(1)}
+.slide::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,4,9,.94) 0%,rgba(6,4,9,.7) 42%,rgba(6,4,9,.1) 75%),linear-gradient(0deg,var(--bg),transparent 30%)}
+.slide .wrap{position:relative;z-index:2;width:100%}
+.slide__c{max-width:600px;display:grid;gap:22px}
+.slide__c p{color:#cfc6e2;font-size:17px;max-width:470px}
+.slide__logo{width:min(420px,80%);filter:drop-shadow(0 0 24px rgba(255,43,214,.45))}
+.slide.bf{background:radial-gradient(ellipse at 80% 30%,rgba(255,31,75,.28),transparent 55%),radial-gradient(ellipse at 15% 90%,rgba(139,61,255,.25),transparent 55%),#07040a}
+.slide.bf::after{display:none}.bf__in{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center}
+.bf__title{font:900 clamp(56px,8.5vw,128px)/.86 var(--fh);text-transform:uppercase;letter-spacing:-.03em}
+.bf__title span{background:linear-gradient(90deg,#ff1f4b,#ff2bd6 60%,#8b3dff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bf__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:560px;justify-self:end;margin-bottom:40px}.bf__grid a{position:relative;aspect-ratio:1;border-radius:18px;overflow:hidden;border:1px solid var(--line2);background:#fff}
+.bf__grid img{width:100%;height:100%;object-fit:cover;transition:transform .6s}.bf__grid a:hover img{transform:scale(1.06)}
+.bf__grid span{position:absolute;left:10px;top:10px;background:linear-gradient(90deg,#ff1f4b,#ff2bd6);font:800 13px/1 var(--fb);padding:7px 10px;border-radius:8px;color:#fff}
+.bf__grid a:nth-child(2),.bf__grid a:nth-child(4){transform:translateY(24px)}
+.count--sm{justify-content:flex-start;margin:4px 0 6px;gap:10px;width:max-content}.count--sm div{min-width:70px;padding:12px 6px}.count--sm b{font-size:30px}
+@media (max-width:1080px){.bf__in{grid-template-columns:1fr}.bf__grid{display:none}}
+.bf__h img{width:min(560px,100%);height:auto;display:block}
+.hx{margin-top:10px;line-height:0}.hx img{height:64px;width:auto;max-width:100%}
+.scene{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#000}.scene>img{width:100%;max-height:640px;object-fit:cover;display:block}
+.dot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:#fff;border:0;z-index:3;box-shadow:0 0 0 0 rgba(255,43,214,.7);animation:pulse 1.8s infinite}
+.dot i{position:absolute;inset:9px;border-radius:50%;background:var(--pink)}.dot.on,.dot:hover{background:var(--pink)}.dot.on i,.dot:hover i{background:#fff}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,43,214,.75)}70%{box-shadow:0 0 0 18px rgba(255,43,214,0)}100%{box-shadow:0 0 0 0 rgba(255,43,214,0)}}
+.pop{position:absolute;z-index:4;width:290px;display:grid;grid-template-columns:84px 1fr;gap:12px;padding:12px;border-radius:16px;background:rgba(12,8,18,.96);border:1px solid var(--line2);backdrop-filter:blur(10px);transform:translate(24px,-50%) scale(.96);opacity:0;pointer-events:none;transition:.2s;box-shadow:0 20px 50px -10px rgba(0,0,0,.7)}
+.pop.on{opacity:1;pointer-events:auto;transform:translate(24px,-50%) scale(1)}.pop--l,.pop--l.on{transform:translate(calc(-100% - 24px),-50%)}
+.pop img{width:84px;height:84px;object-fit:cover;border-radius:10px}.pop small{color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}.pop b{display:block;font-size:14px;line-height:1.3;margin:2px 0 4px}.pop .price{font-size:15px}.pop .row{gap:6px;margin-top:8px}.pop .btn{height:34px;padding:0 14px;font-size:11px}
+.scene__list{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:22px}.mini{display:grid;gap:10px;margin-top:12px}
+.mi{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.mi:hover{border-color:rgba(255,43,214,.45)}
+.mi img{width:64px;height:64px;object-fit:cover;border-radius:10px}.mi b{display:block;font-size:14px;line-height:1.3}.mi .price{font-size:14px}.mi .add{width:36px;height:36px;font-size:18px}
+.launch{position:relative;display:grid;align-items:center;min-height:420px;border-radius:24px;overflow:hidden;border:1px solid var(--line)}
+.launch__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.launch::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,4,10,.95) 0%,rgba(7,4,10,.75) 45%,rgba(7,4,10,.15))}
+.launch__c{position:relative;z-index:2;padding:48px;max-width:620px;display:grid;gap:16px}.launch__c p{color:#d8d1e8}.launch .hx img{height:96px}
+.cols{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.colc{position:relative;display:flex;flex-direction:column;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--card);transition:.3s}.colc:hover{border-color:rgba(255,43,214,.45);transform:translateY(-4px)}
+.colc>img{width:100%;aspect-ratio:4/3;object-fit:cover}.colc__c{padding:16px 16px 10px;display:grid;gap:4px}.colc__c small{color:var(--pink);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.colc__c b{font:900 20px/1.1 var(--fh);text-transform:uppercase}.colc__c span{color:var(--muted);font-size:13px}
+.colc__th{display:flex;gap:6px;padding:0 16px 16px;margin-top:auto}.colc__th img{width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--line)}
+.spot--poster .spot__m{background:#120a1b}.spot--poster .spot__m img{object-fit:contain}
+@media (max-width:1080px){.cats{grid-template-columns:repeat(2,1fr)}.cats .cat:last-child{grid-column:span 2;aspect-ratio:2/1}.cols{grid-template-columns:repeat(2,1fr)}.scene__list{grid-template-columns:1fr}.hx img{height:46px}.launch .hx img{height:64px}.launch__c{padding:30px 24px}
+.nav.open>a{padding:14px 6px;border-bottom:1px solid var(--line)}#sceneTabs{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:4px}#sceneTabs .tab{white-space:nowrap}}
+@media (max-width:640px){.pop,.pop.on,.pop--l,.pop--l.on{position:fixed;left:12px!important;right:12px;top:auto!important;bottom:16px;width:auto;transform:none}.pop{transform:translateY(20px)!important}.pop.on{transform:none!important}
+.dot{width:26px;height:26px;margin:-13px 0 0 -13px}.dot i{inset:8px}.scene>img{min-height:300px}.hx img{height:36px}.launch .hx img{height:52px}.bf__h img{width:100%}.cols{grid-template-columns:1fr 1fr;gap:10px}.colc__c b{font-size:16px}.colc__th{display:none}.cat__l b{font-size:17px}}
+.dots{position:absolute;z-index:3;left:50%;bottom:30px;transform:translateX(-50%);display:flex;gap:10px}
+.dots button{width:34px;height:4px;border-radius:2px;background:rgba(255,255,255,.25)}.dots button.on{background:var(--pink);box-shadow:var(--glow)}
+.arrows{position:absolute;z-index:3;right:28px;bottom:24px;display:flex;gap:10px}
+.arrows button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line2);background:rgba(0,0,0,.4)}.arrows button:hover{border-color:var(--pink)}
+/* trust */
+.trust{border-block:1px solid var(--line);background:var(--bg2)}
+.trust__in{display:grid;grid-template-columns:repeat(4,1fr)}
+.trust__i{display:flex;gap:14px;align-items:center;padding:22px 18px;border-right:1px solid var(--line)}.trust__i:last-child{border:0}
+.trust__i svg{flex:none;color:var(--pink)}.trust__i b{display:block;font:700 14px/1.2 var(--fb)}.trust__i span{color:var(--muted);font-size:13px}
+.sec{padding:90px 0}.sec__h{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:34px}
+.sec__h p{color:var(--muted);max-width:460px;margin-top:10px}
+.lnk{font:600 13px/1 var(--fb);letter-spacing:.14em;text-transform:uppercase;border-bottom:1.5px solid var(--pink);padding-bottom:6px}
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.cat{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:4/5;border:1px solid var(--line);background:var(--card)}
+.cat img{width:100%;height:100%;object-fit:cover;transition:transform .7s}.cat:hover img{transform:scale(1.07)}
+.cat::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(6,4,9,.95))}
+.cat__l{position:absolute;z-index:2;left:22px;right:22px;bottom:20px;display:flex;justify-content:space-between;align-items:end}
+.cat__l b{font:900 20px/1.05 var(--fh);text-transform:uppercase}.cat__l small{display:block;color:var(--muted);font-size:13px;margin-top:6px}
+.cat__l i{width:40px;height:40px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;font-style:normal;transition:.25s}.cat:hover .cat__l i{background:var(--pink);color:#fff}
+/* tabs + cards */
+.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:10px 18px;border-radius:999px;border:1px solid var(--line2);font:600 13px/1 var(--fb);letter-spacing:.06em;color:var(--muted)}
+.tab.on{background:#fff;color:#0b0710;border-color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:.3s}
+.card:hover{border-color:rgba(255,43,214,.45);transform:translateY(-4px);box-shadow:0 18px 40px -18px rgba(255,43,214,.45)}
+.card__m{position:relative;aspect-ratio:1;background:#000;overflow:hidden;display:block}
+.card__m img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s,transform .7s}
+.card__m img.alt{opacity:0}.card:hover .card__m img.alt{opacity:1}.card:hover .card__m img{transform:scale(1.04)}
+.tag{position:absolute;z-index:2;top:12px;left:12px;font:700 10.5px/1 var(--fb);letter-spacing:.14em;text-transform:uppercase;padding:7px 10px;border-radius:6px;background:var(--pink)}
+.tag--bf{background:linear-gradient(90deg,#ff1f4b,#ff2bd6);color:#fff}
+.tag--new{background:var(--cyan);color:#041318}.tag--lim{background:#fff;color:#0b0710}
+.qv{position:absolute;z-index:2;left:12px;right:12px;bottom:12px;height:42px;border-radius:999px;background:rgba(10,6,16,.85);backdrop-filter:blur(8px);border:1px solid var(--line2);font:700 12px/1 var(--fb);letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateY(8px);transition:.25s}
+.card:hover .qv{opacity:1;transform:none}.qv:hover{background:#fff;color:#000}
+.card__b{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card__t{font:600 15.5px/1.35 var(--fb)}.card__k{font:600 11px/1 var(--fb);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.card__f{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center}
+.price{font:800 17px/1 var(--fh)}.price s{font:500 14px var(--fb);color:var(--muted);margin-left:8px}.price .off{color:var(--pink);font:700 12px var(--fb);margin-left:8px}
+.add{width:42px;height:42px;border-radius:50%;background:#fff;color:#0b0710;font-size:22px;line-height:1;transition:.2s}.add:hover{background:var(--pink);color:#fff;box-shadow:var(--glow)}
+.sw{display:flex;gap:6px}.sw i{width:12px;height:12px;border-radius:50%;border:1px solid var(--line2)}
+/* spotlight */
+.spot{display:grid;grid-template-columns:1.1fr 1fr;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:var(--bg2)}
+.spot__m{position:relative;min-height:540px}.spot__m img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.spot__c{padding:60px 56px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.spot__c p{color:var(--muted)}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:12px}.feat div{border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px;background:rgba(255,255,255,.02)}.feat b{display:block;color:var(--pink);font:700 11px/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+/* duo banners */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ban{position:relative;border-radius:22px;overflow:hidden;min-height:420px;border:1px solid var(--line);display:flex;align-items:flex-end}
+.ban img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s}.ban:hover img{transform:scale(1.05)}
+.ban::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(6,4,9,.95))}
+.ban__c{position:relative;z-index:2;padding:34px;display:grid;gap:12px}.ban__c p{color:#d3cae6;max-width:380px}
+/* drop */
+.drop{position:relative;text-align:center;overflow:hidden;border-block:1px solid var(--line);background:radial-gradient(ellipse at 50% 0%,rgba(139,61,255,.35),transparent 60%),var(--bg2)}
+.count{display:flex;justify-content:center;gap:14px;margin:30px 0 34px}
+.count div{min-width:104px;padding:20px 8px;border:1px solid var(--line2);border-radius:14px;background:rgba(0,0,0,.45)}
+.count b{display:block;font:900 48px/1 var(--fh);text-shadow:var(--glow)}.count span{font:600 11px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+/* lifestyle */
+.life{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 280px;gap:14px}
+.life a{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}.life img{width:100%;height:100%;object-fit:cover;transition:transform .7s}.life a:hover img{transform:scale(1.06)}
+.life a:first-child{grid-row:span 2}.life span{position:absolute;left:14px;bottom:12px;font:600 12px/1 var(--fb);letter-spacing:.12em;text-transform:uppercase;background:rgba(0,0,0,.6);padding:8px 10px;border-radius:6px;opacity:0;transition:.25s}.life a:hover span{opacity:1}
+/* news */
+.news{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;border:1px solid var(--line);border-radius:24px;padding:54px;background:linear-gradient(120deg,rgba(255,43,214,.12),rgba(139,61,255,.08) 50%,transparent)}
+.news form{display:flex;gap:10px}.inp{flex:1;height:52px;background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:0 22px;color:var(--text);font:inherit}.inp:focus{outline:none;border-color:var(--pink)}
+/* footer */
+.ftr{border-top:1px solid var(--line);background:#030205;padding:72px 0 28px;margin-top:20px}
+.ftr__g{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px}
+.ftr h5{font:700 12px/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.ftr ul{list-style:none;display:grid;gap:11px;font-size:14px}.ftr ul a:hover{color:var(--pink)}
+.ftr__b{margin-top:54px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:12.5px}
+.pay{display:flex;gap:8px}.pay span{border:1px solid var(--line2);border-radius:6px;padding:4px 8px;font:700 10px/1 var(--fb);letter-spacing:.08em}
+/* shop */
+.ph{padding:56px 0 28px;border-bottom:1px solid var(--line);margin-bottom:28px}.ph p{color:var(--muted);margin-top:10px}
+.crumb{font:500 12px/1 var(--fb);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.crumb a:hover{color:var(--pink)}
+.shop{display:grid;grid-template-columns:250px 1fr;gap:36px;padding-bottom:90px}
+.side{position:sticky;top:100px;align-self:start;display:grid;gap:26px}
+.side h6{font:700 12px/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px}
+.chk{display:flex;align-items:center;gap:10px;padding:6px 0;color:#d8d1e8;font-size:14px;cursor:pointer}.chk input{accent-color:var(--pink);width:16px;height:16px}
+.chk em{margin-left:auto;font-style:normal;color:var(--muted);font-size:12px}
+.range{width:100%;accent-color:var(--pink)}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap}.bar span{color:var(--muted)}
+.sel{height:44px;background:var(--card);border:1px solid var(--line2);border-radius:999px;color:var(--text);padding:0 18px;font:inherit}
+.grid--3{grid-template-columns:repeat(3,1fr)}
+/* pdp */
+.pdp{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;padding:10px 0 80px}
+.gal{display:grid;grid-template-columns:84px 1fr;gap:14px;align-self:start;position:sticky;top:100px}
+.thumbs{display:grid;gap:10px;align-content:start}.th{border:1px solid var(--line);border-radius:10px;overflow:hidden;aspect-ratio:1}.th img{width:100%;height:100%;object-fit:cover}.th.on{border-color:var(--pink);box-shadow:var(--glow)}
+.gal__main{border-radius:20px;overflow:hidden;border:1px solid var(--line);aspect-ratio:1;background:#000}.gal__main img{width:100%;height:100%;object-fit:cover}
+.info{display:flex;flex-direction:column;gap:20px}
+.info h1{font:900 clamp(32px,3.4vw,46px)/1.02 var(--fh);text-transform:uppercase}
+.info .price{font-size:28px}.stock{display:flex;align-items:center;gap:8px;color:var(--ok);font-size:14px}.stock i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.opts{display:flex;gap:10px;flex-wrap:wrap}.opt{padding:12px 18px;border:1px solid var(--line2);border-radius:12px;background:var(--card);font-size:14px}.opt.on{border-color:var(--pink);box-shadow:var(--glow)}
+.row{display:flex;gap:12px}.step{display:flex;align-items:center;border:1px solid var(--line2);border-radius:999px;height:52px}.step button{width:46px;height:100%;font-size:20px}.step span{min-width:26px;text-align:center;font-weight:700}
+.ship{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ship div{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:#d8d1e8}
+.acc{border-top:1px solid var(--line)}.acc details{border-bottom:1px solid var(--line)}.acc summary{list-style:none;cursor:pointer;padding:18px 0;font:700 13px/1 var(--fb);letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between}
+.acc summary::after{content:"+";font-size:20px;color:var(--pink)}.acc details[open] summary::after{content:"–"}.acc .ac{padding:0 0 18px;color:var(--muted)}.acc ul{padding-left:18px}
+.sticky-atc{position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(10,6,16,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line2);transform:translateY(110%);transition:.35s}
+.sticky-atc.show{transform:none}.sticky-atc .wrap{display:flex;align-items:center;gap:16px;height:78px}.sticky-atc img{width:52px;height:52px;border-radius:10px;object-fit:cover}.sticky-atc b{font-size:15px}.sticky-atc .grow{flex:1}
+/* drawer, modal */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:90;opacity:0;pointer-events:none;transition:.3s}.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);z-index:100;background:var(--bg2);border-left:1px solid var(--line);transform:translateX(100%);transition:.35s;display:flex;flex-direction:column}
+.drawer.on{transform:none}.dr__h{display:flex;justify-content:space-between;align-items:center;padding:22px 24px;border-bottom:1px solid var(--line)}
+.dr__h b{font:900 20px/1 var(--fh);text-transform:uppercase}
+.fs{padding:16px 24px;border-bottom:1px solid var(--line);font-size:13px;color:#d8d1e8}.fs__bar{height:6px;border-radius:3px;background:var(--card2);margin-top:10px;overflow:hidden}.fs__bar i{display:block;height:100%;background:var(--grad);transition:width .4s}
+.dr__items{flex:1;overflow:auto;padding:8px 24px}
+.ci{display:grid;grid-template-columns:76px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center}.ci img{border-radius:10px;aspect-ratio:1;object-fit:cover}
+.ci small{color:var(--muted)}.ci .step{height:34px;margin-top:8px;width:max-content}.ci .step button{width:32px;font-size:16px}
+.dr__f{padding:20px 24px;border-top:1px solid var(--line);display:grid;gap:12px}
+.modal{position:fixed;z-index:110;left:50%;top:50%;width:min(940px,94vw);max-height:90vh;overflow:auto;transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:.3s;background:var(--bg2);border:1px solid var(--line2);border-radius:22px}
+.modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}.modal__in{display:grid;grid-template-columns:1fr 1fr}.modal__in>img{width:100%;height:100%;object-fit:cover;aspect-ratio:1}.modal__c{padding:34px;display:grid;gap:16px;align-content:start}
+.x{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);font-size:22px;z-index:2}
+.search{position:fixed;inset:0 0 auto 0;z-index:110;background:var(--bg2);border-bottom:1px solid var(--line2);transform:translateY(-105%);transition:.3s;padding:26px 0 30px}.search.on{transform:none}
+.search input{width:100%;height:60px;background:transparent;border:0;border-bottom:2px solid var(--pink);color:#fff;font:700 26px var(--fh);outline:none}
+.sres{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}.sres a{display:grid;gap:8px;font-size:13px}.sres img{border-radius:10px;aspect-ratio:1;object-fit:cover}
+.toast{position:fixed;left:50%;bottom:26px;z-index:130;transform:translate(-50%,140px);background:#fff;color:#0b0710;font-weight:700;padding:14px 22px;border-radius:999px;transition:.35s;opacity:0;display:flex;gap:10px;align-items:center}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.empty{color:var(--muted);padding:30px 0}
+@media (max-width:1080px){.nav{display:none}.burger{display:grid}.nav.open{display:flex;flex-direction:column;position:absolute;top:78px;left:0;right:0;background:var(--bg);padding:14px 20px 22px;border-bottom:1px solid var(--line)}.mega{display:none}
+.grid{grid-template-columns:repeat(2,1fr)}.cats,.trust__in{grid-template-columns:repeat(2,1fr)}.spot,.duo,.news,.pdp,.modal__in{grid-template-columns:1fr}.shop{grid-template-columns:1fr}.side{position:static;grid-template-columns:1fr 1fr}.grid--3{grid-template-columns:repeat(2,1fr)}
+.life{grid-template-columns:1fr 1fr;grid-template-rows:auto}.life a{aspect-ratio:1}.life a:first-child{grid-column:span 2;grid-row:auto;aspect-ratio:16/10}.ftr__g{grid-template-columns:1fr 1fr}.gal{position:static}.sres{grid-template-columns:repeat(3,1fr)}.spot__c{padding:36px 26px}}
+@media (max-width:560px){.wrap{padding:0 18px}.hdr__in{gap:12px}.logo img{height:40px}.news{padding:30px 22px}.news form{flex-direction:column}.count div{min-width:72px}.count b{font-size:32px}.trust__i{padding:16px 10px}.hero{min-height:620px}}
+</style></head><body>
+
+<div class="ticker"><div class="ticker__t" id="tick"></div></div>
+
+<header class="hdr"><div class="wrap hdr__in">
+  <a href="#home" class="logo" aria-label="ViceMode home"><img src="vicemode-logo-sm.png" alt="ViceMode"></a>
+  <nav class="nav" id="nav">
+    <div class="mm-wrap"><button>Shop ▾</button>
+      <div class="mega"><div class="wrap mega__in" id="mega"></div></div></div>
+    <a href="#sale" style="color:#ff5c8a">Black Friday</a><a href="#battle">Battle Stations</a><a href="#lighting">Lighting</a><a href="#accessories">Accessories</a><a href="#tech">Audio &amp; Tech</a><a href="#posters">Posters</a><a href="#collections">Collections</a>
+  </nav>
+  <div class="icons">
+    <button class="ib" id="sBtn" aria-label="Search"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="7"/><path d="m19 19-5-5"/></svg></button>
+    <button class="ib" id="cBtn" aria-label="Cart"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h2l2 11h11l2-8H6"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span class="badge-n" id="cnt">0</span></button>
+    <button class="ib burger" id="burger" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h16M3 11h16M3 16h16"/></svg></button>
+  </div>
+</div></header>
+
+<div class="search" id="search"><div class="wrap">
+  <input id="sIn" placeholder="Search chairs, neon, LED…" autocomplete="off"><div class="sres" id="sRes"></div>
+</div></div>
+
+<main>
+<div id="v-home" class="view">
+  <section class="hero" id="hero">
+    <div class="slide bf on"><div class="bf__glow"></div>
+      <div class="wrap bf__in"><div class="slide__c"><p class="eyebrow" style="color:#ff5c8a">Early Black Friday · Live now through 12/1</p><h1 class="bf__h"><img src="h-blackfriday.png" alt="Black Friday"></h1><p>Up to 33% off chairs, desks, lighting and setup gear. Real markdowns, shipped from the US.</p>
+        <div class="count count--sm" data-cd="2026-12-01T23:59:00-05:00"><div><b>00</b><span>Days</span></div><div><b>00</b><span>Hrs</span></div><div><b>00</b><span>Min</span></div><div><b>00</b><span>Sec</span></div></div>
+        <div class="row"><a class="btn btn--w" href="#sale">Shop the sale</a></div></div>
+        <div class="bf__grid"><a href="#p-pink-chair"><img src="pink-chair-1.jpg" alt=""><span>-13%</span></a><a href="#p-corner-lamp"><img src="corner-lamp-1.jpg" alt=""><span>-29%</span></a><a href="#p-flamingo-neon"><img src="neon-studio.jpg" alt=""><span>-30%</span></a><a href="#p-led-desk-48"><img src="led-desk-48-1.jpg" alt=""><span>-12%</span></a></div></div></div>
+    <div class="slide bf bf--2"><div class="bf__glow"></div>
+      <div class="wrap bf__in"><div class="slide__c"><p class="eyebrow" style="color:#ff5c8a">Black Friday doorbusters</p><h1 class="bf__h"><img src="h-lightitup.png" alt="Light it up from $19.99"></h1><p>LED strips, neon, corner lamps and wall projectors. Turn any room into the after-hours setup.</p><div class="row"><a class="btn btn--w" href="#lighting">Shop lighting deals</a></div></div>
+        <div class="bf__grid"><a href="#p-arc-lamp-rgb"><img src="arc-lamp-rgb-1.jpg" alt=""><span>$119.99</span></a><a href="#p-led-strip-kit"><img src="led-glow.jpg" alt=""><span>$19.99</span></a><a href="#p-projector-rgb"><img src="projector-rgb-1.jpg" alt=""><span>$54.99</span></a><a href="#p-corner-lamp-rgb"><img src="corner-lamp-rgb-1.jpg" alt=""><span>$84.99</span></a></div></div></div>
+    <div class="slide"><img src="chair-life-1.jpg" alt="Gaming recliner in a living room setup">
+      <div class="wrap"><div class="slide__c"><img class="slide__logo" src="vicemode-logo.png" alt="ViceMode"><p>Gaming seats, room lighting and setup gear, shipped from the US.</p><div class="row"><a class="btn btn--w" href="#shop">Shop now</a><a class="btn" href="#gaming">Gaming</a></div></div></div></div>
+    <div class="slide"><img src="neon-trio.jpg" alt="Neon flamingo, cactus and tree lights">
+      <div class="wrap"><div class="slide__c"><p class="eyebrow">Decor</p><h1 class="h1">Neon that sets <span class="grad">the mood.</span></h1><p>Flamingo, cactus, star and tree neon lights with a remote. Steady, flashing or dim.</p><div class="row"><a class="btn btn--w" href="#p-flamingo-neon">Shop neon — $42.99</a></div></div></div></div>
+    <div class="slide"><img src="chair-life-2.jpg" alt="Two gaming recliners in a loft">
+      <div class="wrap"><div class="slide__c"><p class="eyebrow">Gaming</p><h1 class="h1">Game in <span class="grad">comfort.</span></h1><p>The RESPAWN 900 recliner: 135° recline, 360° swivel, cupholder and footrest.</p><div class="row"><a class="btn btn--w" href="#p-respawn-900">Shop the recliner</a></div></div></div></div>
+    <div class="dots" id="dots"></div>
+    <div class="arrows"><button id="prev" aria-label="Previous">←</button><button id="next" aria-label="Next">→</button></div>
+  </section>
+
+  <section class="trust"><div class="wrap trust__in">
+    <div class="trust__i"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 7h14v11H2zM16 11h5l3 3v4h-8"/><circle cx="7" cy="20" r="2"/><circle cx="19" cy="20" r="2"/></svg><div><b>Free shipping $75+</b><span>Ships from the US</span></div></div>
+    <div class="trust__i"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg><div><b>30-day returns</b><span>No-stress exchanges</span></div></div>
+    <div class="trust__i"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="11" width="18" height="12" rx="2"/><path d="M8 11V7a5 5 0 0 1 10 0v4"/></svg><div><b>Secure checkout</b><span>Shop Pay · Apple Pay · cards</span></div></div>
+    <div class="trust__i"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h18v12H4zM4 7l9 6 9-6"/></svg><div><b>Real support</b><span>hello@vicemode.com</span></div></div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec__h"><div><p class="eyebrow">Shop by category</p><h2 class="h2" style="margin-top:12px">Build your <span class="grad">setup</span></h2></div><a class="lnk" href="#shop">View all</a></div>
+    <div class="cats" id="cats"></div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap">
+    <div class="sec__h"><div><p class="eyebrow">Shop</p><h2 class="hx"><img src="h-essentials.png" alt="Setup essentials"></h2></div>
+      <div class="tabs" id="tabs"><button class="tab on" data-t="sale">Black Friday</button><button class="tab" data-t="battle">Battle Stations</button><button class="tab" data-t="lighting">Lighting</button><button class="tab" data-t="accessories">Accessories</button><button class="tab" data-t="tech">Audio &amp; Tech</button></div></div>
+    <div class="grid" id="homeGrid"></div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="spot">
+    <div class="spot__m"><img src="chair-life-1.jpg" alt="RESPAWN 900 gaming recliner"></div>
+    <div class="spot__c"><p class="eyebrow">Product spotlight</p><h2 class="h2">RESPAWN 900 <span class="grad">Recliner</span></h2>
+      <p>A full gaming recliner: padded seat, removable headrest pillow, cupholder and side pouch for your controller and headset. Ships free from the US.</p>
+      <div class="feat"><div><b>Recline</b>Up to 135°</div><div><b>Base</b>360° swivel</div><div><b>Capacity</b>275 lbs</div><div><b>Warranty</b>5-year limited</div></div>
+      <div class="row"><button class="btn btn--p" data-add="respawn-900">Add to cart — $468.99</button><a class="btn" href="#p-respawn-900">Details</a></div></div>
+  </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="duo">
+    <a class="ban" href="#battle"><img src="chair-life-2.jpg" alt=""><div class="ban__c"><p class="eyebrow">Battle Stations</p><h3 class="h2">Seats &amp; desks</h3><p>Gaming chairs, recliners and LED desks built for long sessions.</p><span class="lnk" style="width:max-content">Shop battle stations</span></div></a>
+    <a class="ban" href="#lighting"><img src="corner-lamp-rgb-1.jpg" alt=""><div class="ban__c"><p class="eyebrow">Lighting</p><h3 class="h2">Room lighting</h3><p>Floor lamps, neon and LED strips that set the mood.</p><span class="lnk" style="width:max-content">Shop lighting</span></div></a>
+  </div></div></section>
+
+  
+
+  <section class="sec" id="setupSec"><div class="wrap">
+    <div class="sec__h"><div><p class="eyebrow">Interactive</p><h2 class="hx"><img src="h-shopsetup.png" alt="Shop the setup"></h2><p>Tap the glowing dots to shop the room, then grab the pieces that complete the look.</p></div>
+      <div class="tabs" id="sceneTabs"></div></div>
+    <div class="scene" id="scene"></div>
+    <div class="scene__list" id="sceneList"></div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap"><a class="launch" href="#col-launch-week">
+    <img class="launch__bg" src="chair-life-1.jpg" alt="">
+    <div class="launch__c"><p class="eyebrow">This week only</p><h2 class="hx"><img src="h-launchweek.png" alt="Launch Week"></h2><p>The biggest game drop of the year lands this week. Seats, glow and gear to get your setup ready for launch night.</p><span class="btn btn--w" style="width:max-content">Shop the collection</span></div>
+  </a></div></section>
+
+  <section class="sec" id="colSec" style="padding-top:0"><div class="wrap">
+    <div class="sec__h"><div><p class="eyebrow">Curated by ViceMode</p><h2 class="hx"><img src="h-collections.png" alt="The collections"></h2></div><a class="lnk" href="#collections">All collections</a></div>
+    <div class="cols" id="colGrid"></div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="spot spot--poster">
+    <div class="spot__m"><img src="poster-cheat-codes-1.jpg" alt="Cheat Codes poster"></div>
+    <div class="spot__c"><p class="eyebrow">New · Posters</p><h2 class="h2">Cheat Codes <span class="grad">Poster</span></h2>
+      <p>Our original 20-code cheat sheet: Max Vibes, Golden Hour Forever, Rage-Quit Immunity and more. Printed on premium matte paper. More poster drops coming soon.</p>
+      <div class="feat"><div><b>Sizes</b>12×16 · 18×24</div><div><b>Paper</b>Premium matte</div><div><b>Printed</b>On demand in the US</div><div><b>From</b>$29.99</div></div>
+      <div class="row"><button class="btn btn--p" data-add="poster-cheat-codes">Add to cart</button><a class="btn" href="#posters">Shop posters</a></div></div>
+  </div></div></section>
+
+  <section class="sec" id="rvSec" hidden style="padding-top:0"><div class="wrap"><div class="sec__h"><div><p class="eyebrow">Picked up where you left off</p><h2 class="h2" style="margin-top:12px">Recently <span class="grad">viewed</span></h2></div></div><div class="grid" id="rvGrid"></div></div></section>
+
+  <section class="sec" id="joinSec" style="padding-top:0"><div class="wrap"><div class="news">
+    <div><p class="eyebrow">Join the crew</p><h2 class="h2" style="margin-top:12px">10% off your <span class="grad">first order</span></h2><p style="color:var(--muted);margin-top:12px">Drop alerts, restocks and members-only pricing. No spam.</p></div>
+    <form id="nf"><input class="inp" type="email" placeholder="Your email" required aria-label="Email"><button class="btn btn--p" type="submit">Sign up</button></form>
+  </div></div></section>
+</div>
+
+<div id="v-shop" class="view" hidden><div class="wrap">
+  <div class="ph"><p class="crumb"><a href="#home">Home</a> / <span id="shopCrumb">Shop</span></p><h1 class="h2" id="shopT">Shop all</h1><p id="shopD"></p></div>
+  <div class="shop">
+    <aside class="side">
+      <div><h6>Category</h6><div id="fCat"></div></div>
+      <div><h6>Price</h6><input type="range" class="range" id="fPrice" min="10" max="500" step="5" value="500"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:13px"><span>$10</span><span id="fPv">Up to $500</span></div></div>
+      <div><h6>Offers</h6><label class="chk"><input type="checkbox" id="fSale"> On sale</label></div>
+    </aside>
+    <div><div class="bar"><span id="shopN"></span><select class="sel" id="sort" aria-label="Sort"><option value="feat">Featured</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option><option value="az">A–Z</option></select></div>
+      <div class="grid grid--3" id="shopGrid"></div></div>
+  </div>
+</div></div>
+
+<div id="v-collections" class="view" hidden><div class="wrap" style="padding-bottom:90px"><div class="ph"><p class="crumb"><a href="#home">Home</a> / Collections</p><h1 class="hx"><img src="h-collections.png" alt="The collections"></h1><p>Hand-picked edits for every kind of setup.</p></div><div class="cols" id="colGrid2"></div></div></div>
+<div id="v-product" class="view" hidden></div>
+<div id="v-cart" class="view" hidden></div>
+<div id="v-about" class="view" hidden><div class="wrap" style="max-width:860px;padding-bottom:90px">
+  <div class="ph" style="border:0;text-align:center"><img src="vicemode-logo.png" alt="ViceMode" style="width:min(420px,80%);margin:0 auto 26px"><h1 class="h2">More than a game. <span class="grad">A lifestyle.</span></h1></div>
+  <div style="color:#d8d1e8;font-size:18px;display:grid;gap:16px"><p>ViceMode is where gaming, style and culture collide. We pick gaming seats, room lighting and setup gear that make your space feel like your own, with ViceMode merch on the way.</p><p>ViceMode is an independent brand and is not affiliated with or endorsed by any video game publisher.</p><p>Questions? hello@vicemode.com</p></div>
+  <div style="margin-top:30px"><a class="btn btn--p" href="#shop">Shop the collection</a></div></div></div>
+</main>
+
+<footer class="ftr"><div class="wrap">
+  <div class="ftr__g">
+    <div><img src="vicemode-logo-sm.png" alt="ViceMode" style="height:64px;width:auto"><p style="color:var(--muted);margin-top:16px;max-width:320px;font-size:14px">Where gaming, style and culture collide. Neon decor, setup gear and drops built for the next generation.</p></div>
+    <div><h5>Shop</h5><ul><li><a href="#sale">Black Friday Sale</a></li><li><a href="#battle">Battle Stations</a></li><li><a href="#lighting">Lighting</a></li><li><a href="#accessories">Accessories</a></li><li><a href="#tech">Audio &amp; Tech</a></li><li><a href="#posters">Posters</a></li><li><a href="#collections">Collections</a></li></ul></div>
+    <div><h5>Help</h5><ul><li><a href="#about">About</a></li><li><a href="#cart">Cart</a></li><li><span style="color:var(--muted)">Shipping &amp; returns</span></li><li><span style="color:var(--muted)">hello@vicemode.com</span></li></ul></div>
+    <div><h5>Follow</h5><ul><li><span>Instagram</span></li><li><span>TikTok</span></li><li><span>X / Twitter</span></li></ul></div>
+  </div>
+  <div class="ftr__b"><span>© 2026 ViceMode. ViceMode is an independent brand, not affiliated with or endorsed by any video game publisher.</span><div class="pay"><span>VISA</span><span>MC</span><span>AMEX</span><span>SHOP PAY</span><span>APPLE PAY</span></div></div>
+</div></footer>
+
+<div class="sticky-atc" id="satc"></div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer"><div class="dr__h"><b>Your cart</b><button class="ib" id="dClose" aria-label="Close">✕</button></div>
+  <div class="fs" id="fs"></div><div class="dr__items" id="dItems"></div>
+  <div class="dr__f"><div style="display:flex;justify-content:space-between;font-size:17px"><span>Subtotal</span><b id="dSub">$0.00</b></div><small style="color:var(--muted)">Taxes and shipping calculated at checkout.</small><a class="btn btn--p btn--block" href="#cart">Checkout</a></div></aside>
+<div class="modal" id="modal"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const P=[{"id": "respawn-900", "t": "RESPAWN 900 Gaming Recliner \u2014 Blue", "c": "battle", "p": 429.99, "cmp": 468.99, "img": "chair-life-1.jpg", "b": "Black Friday", "opts": [], "d": "The RESPAWN 900 is a full gaming recliner: segmented padding, a removable headrest pillow, a cupholder and a side pouch for your controller and headset. The back and footrest recline independently up to 135\u00b0, and the pedestal base swivels 360\u00b0. Backed by the RESPAWN 5-Year Limited Warranty.", "gal": ["chair-life-1.jpg", "chair-life-2.jpg", "chair-34.jpg", "chair-front.jpg", "chair-side.jpg", "chair-specs.jpg", "chair-features.jpg"], "specs": ["Reclines up to 135\u00b0, footrest moves independently", "360\u00b0 swivel pedestal base", "Cupholder + removable side pouch", "Holds up to 275 lbs", "35.04\"D \u00d7 30.71\"W \u00d7 44.88\"H \u00b7 48.5 lbs", "RESPAWN 5-Year Limited Warranty"]}, {"id": "pink-chair", "t": "Pink Gaming Chair with Footrest", "c": "battle", "p": 139.99, "cmp": 159.99, "img": "pink-chair-1.jpg", "b": "Black Friday", "opts": [], "d": "A pink and white racing-style gaming chair with a pull-out footrest, headrest pillow and lumbar cushion. Locks anywhere from 90\u00b0 to 135\u00b0 so you can sit up for ranked matches or lean back between them.", "gal": ["pink-chair-1.jpg", "pink-chair-2.jpg", "pink-chair-3.jpg"], "specs": ["90\u00b0\u2013135\u00b0 locking recline", "Pull-out footrest", "Headrest pillow + lumbar cushion", "360\u00b0 swivel with smooth casters"]}, {"id": "white-gaming-chair", "t": "Ergonomic Gaming Chair \u2014 Black & White", "c": "battle", "p": 109.99, "cmp": 122.99, "img": "wchair-studio2.jpg", "b": "Black Friday", "opts": [], "d": "A high-back racing-style gaming chair with a headrest pillow and adjustable lumbar support. Locks anywhere from 90\u00b0 to 135\u00b0 of recline, swivels 360\u00b0 and rolls on smooth casters.", "gal": ["wchair-studio2.jpg", "wchair-main.jpg", "wchair-tilt.jpg", "wchair-support.jpg", "wchair-comfort.jpg"], "specs": ["Adjustable lumbar support + headrest pillow", "Locks from 90\u00b0 to 135\u00b0 recline", "360\u00b0 swivel with smooth casters", "Gas-lift height adjustment"]}, {"id": "led-desk-48", "t": "48\" LED Gaming Desk with Monitor Shelf", "c": "battle", "p": 149.99, "cmp": 169.99, "img": "led-desk-48-1.jpg", "b": "Black Friday", "opts": [], "d": "A 47\" gaming desk with a full-length monitor shelf, built-in RGB LED strips and storage shelves for your console, controllers and PC.", "gal": ["led-desk-48-1.jpg", "led-desk-48-2.jpg", "led-desk-48-3.jpg"], "specs": ["47.2\" wide with 4.5\" raised monitor shelf", "RGB LED strips: 10 colors, 10 modes", "Side shelves for consoles and storage", "Built-in power and USB ports"]}, {"id": "l-desk", "t": "L-Shaped Corner Gaming Desk", "c": "battle", "p": 99.99, "cmp": 119.99, "img": "l-desk-1.jpg", "b": "Black Friday", "opts": [], "d": "Turn a corner into a full battle station. Carbon-fiber-look L-shaped desk with a removable monitor riser that clips onto any edge.", "gal": ["l-desk-1.jpg", "l-desk-2.jpg", "l-desk-3.jpg"], "specs": ["50.4\" \u00d7 50.4\" corner layout", "Removable monitor riser", "Carbon-fiber texture top", "Sturdy Z-frame steel legs"]}, {"id": "flamingo-neon", "t": "Flamingo Neon Light with Remote", "c": "lighting", "p": 29.99, "cmp": 42.99, "img": "neon-studio.jpg", "b": "Black Friday", "opts": ["Flamingo", "Cactus", "Star", "Tree"], "d": "A glowing neon flamingo that turns any shelf, desk or nightstand into a Miami-at-night scene. The remote switches between three modes: flashing for party vibes, steady glow, and a soft dim night light.", "gal": ["neon-studio.jpg", "neon-trio.jpg", "neon-palm-set.jpg", "neon-remote.jpg", "neon-star.jpg"], "specs": ["3 modes: flashing, steady, dim", "Remote control included", "Non-toxic ABS base", "Choose flamingo, cactus, star or tree"]}, {"id": "led-strip-kit", "t": "Neon Glow LED Strip Kit \u2014 32.8 ft", "c": "lighting", "p": 19.99, "cmp": 29.99, "img": "led-glow.jpg", "b": "Black Friday", "opts": [], "d": "Paint your room pink and purple. 32.8 feet of color-changing RGB LED strip with a remote: run it behind the TV, under the desk or around the ceiling for the full after-dark glow. Peel-and-stick, no tools needed.", "gal": ["led-glow.jpg", "led-box.jpg", "led-strips.jpg", "led-open.jpg", "led-facts.jpg"], "specs": ["32.8 ft of RGB LED strip", "20 colors with remote", "Peel-and-stick install", "Behind TV, desk or ceiling"]}, {"id": "corner-lamp", "t": "RGB Corner Floor Lamp", "c": "lighting", "p": 49.99, "cmp": 69.99, "img": "corner-lamp-1.jpg", "b": "Black Friday", "opts": [], "d": "A slim LED floor lamp that tucks into any corner and washes the walls in color. Go full sunset orange, deep blue or warm white for movie night.", "gal": ["corner-lamp-1.jpg", "corner-lamp-2.jpg", "corner-lamp-3.jpg"], "specs": ["RGB colors + warm and cool white", "Slim corner design", "Remote control", "Ships from the US in 1\u20133 days"]}, {"id": "corner-lamp-rgb", "t": "RGB Corner Lamp \u2014 Pro", "c": "lighting", "p": 84.99, "cmp": 99.99, "img": "corner-lamp-rgb-1.jpg", "b": "Black Friday", "opts": [], "d": "A taller, brighter corner light for living rooms and game rooms. Frame your TV with two of them for the full glow.", "gal": ["corner-lamp-rgb-1.jpg", "corner-lamp-rgb-2.jpg", "corner-lamp-rgb-3.jpg"], "specs": ["Full RGB color range", "Minimal floor-standing pole", "Pairs great beside a TV or desk", "Ships from the US"]}, {"id": "arc-lamp-rgb", "t": "RGB Arc Floor Lamp", "c": "lighting", "p": 119.99, "cmp": 139.99, "img": "arc-lamp-rgb-1.jpg", "b": "Black Friday", "opts": [], "d": "A sweeping arc lamp that glows in any color. Curves over a couch or desk and doubles as a statement piece when it is off.", "gal": ["arc-lamp-rgb-1.jpg", "arc-lamp-rgb-2.jpg", "arc-lamp-rgb-3.jpg"], "specs": ["Full RGB color range", "Arched design that reaches over a sofa or desk", "Weighted base", "Ships from the US in 1\u20133 days"]}, {"id": "arc-lamp-white", "t": "Arc Floor Lamp \u2014 Dimmable White", "c": "lighting", "p": 84.99, "cmp": 99.99, "img": "arc-lamp-white-1.jpg", "b": "Black Friday", "opts": [], "d": "The same sweeping arc in clean white light. Switch from crisp 6000K to warm 3000K with the remote.", "gal": ["arc-lamp-white-1.jpg", "arc-lamp-white-2.jpg", "arc-lamp-white-3.jpg"], "specs": ["3000K\u20136000K color temperature", "Remote control", "Weighted base", "Ships from the US in 1\u20133 days"]}, {"id": "projector-rgb", "t": "Crystal Wall Projector", "c": "lighting", "p": 54.99, "cmp": 64.99, "img": "projector-rgb-1.jpg", "b": "Black Friday", "opts": ["RGB", "Warm Glow"], "d": "Plug it into any outlet and it throws a shimmering crystal light pattern across your wall. Pick multi-color RGB or a cozy warm glow.", "gal": ["projector-rgb-1.jpg", "projector-warm-1.jpg", "projector-rgb-2.jpg", "projector-warm-2.jpg", "projector-rgb-3.jpg"], "specs": ["9 colors + RGB gradient mode", "Plug-in, no cables", "Dusk-to-dawn auto sensor", "Adjustable brightness"]}, {"id": "car-led", "t": "Car Interior RGB LED Kit", "c": "lighting", "p": 39.99, "cmp": 49.99, "img": "car-led-1.jpg", "b": "Black Friday", "opts": [], "d": "Four RGB light bars for under the dash and seats. Control colors from your phone or the remote, or set them to pulse with your music.", "gal": ["car-led-1.jpg", "car-led-2.jpg", "car-led-3.jpg"], "specs": ["4 LED bars + controller", "App and remote control", "Music sync mode", "Plugs into the car charger port"]}, {"id": "charger-stand", "t": "3-in-1 Magnetic Charging Stand", "c": "tech", "p": 59.99, "cmp": 69.99, "img": "charger-stand-1.jpg", "b": "Black Friday", "opts": [], "d": "Charge your phone, earbuds and watch from one fold-up stand. The magnetic pad holds your phone at eye level while it charges.", "gal": ["charger-stand-1.jpg", "charger-stand-2.jpg"], "specs": ["Charges phone, earbuds and watch", "Magnetic phone mount", "Folds flat for travel", "USB-C powered"]}, {"id": "mic", "t": "RGB USB Gaming & Streaming Microphone", "c": "tech", "p": 69.99, "cmp": null, "b": "New", "opts": [], "gal": ["mic-studio.jpg", "mic-1.jpg", "mic-2.jpg", "mic-3.jpg"], "img": "mic-studio.jpg", "d": "Plug-and-play USB mic with RGB lighting and tap-to-mute. Cardioid pickup and noise reduction keep your voice clear on stream and in party chat, with a headphone jack for real-time monitoring.", "specs": ["USB-C plug and play, no drivers", "Tap-to-mute with RGB glow", "Cardioid pickup + noise reduction", "Gain knob + headphone monitoring"]}, {"id": "drum-speaker", "t": "Bluetooth Speaker with LED Ring", "c": "tech", "p": 64.99, "cmp": null, "img": "drum-speaker-1.jpg", "b": "New", "opts": ["Black", "Pink"], "d": "A compact wireless speaker with a glowing LED ring on each end. Big sound for the desk, room or a car ride.", "gal": ["drum-speaker-1.jpg", "drum-speaker-2.jpg", "drum-speaker-3.jpg"], "specs": ["Bluetooth wireless", "LED light rings", "Onboard play and volume buttons", "Choose black or pink"]}, {"id": "speaker-stand", "t": "Phone Stand with Bluetooth Speaker", "c": "tech", "p": 39.99, "cmp": 49.99, "img": "speaker-stand-1.jpg", "b": "Black Friday", "opts": [], "d": "An adjustable phone stand with a Bluetooth 5.3 speaker built into the base. Rotates and tilts for streaming, video calls or watching clips.", "gal": ["speaker-stand-1.jpg", "speaker-stand-2.jpg"], "specs": ["Bluetooth 5.3 speaker base", "360\u00b0 rotating, height adjustable", "Folds flat", "Non-slip silicone pads"]}, {"id": "halo-light", "t": "Ring Light Tripod for Streaming", "c": "tech", "p": 59.99, "cmp": null, "img": "halo-light-1.jpg", "b": "New", "opts": [], "d": "A phone tripod with a built-in LED ring light for streams, TikToks and video calls. Folds down into a handheld stick.", "gal": ["halo-light-1.jpg", "halo-light-2.jpg"], "specs": ["LED ring light", "Tripod + handheld stick in one", "Adjustable height", "Black or white"]}, {"id": "mini-fan", "t": "Rechargeable Bladeless Mini Fan", "c": "accessories", "p": 24.99, "cmp": null, "img": "mini-fan-1.jpg", "b": "New", "opts": [], "d": "A rechargeable handheld fan with a desk base. Keeps you cool during long sessions without blade noise.", "gal": ["mini-fan-1.jpg", "mini-fan-2.jpg", "mini-fan-3.jpg"], "specs": ["Bladeless design", "USB rechargeable", "Handheld or on the desk base", "Multiple colors"]}, {"id": "ps5-stand", "t": "Cooling Stand & Dual Controller Charger for PS5", "c": "accessories", "p": 69.99, "cmp": 79.99, "gal": ["ps5-stand-1.jpg", "ps5-stand-2.jpg"], "d": "Stand your PS5 upright, keep it cool and charge two controllers at once. Built-in cooling fans, LED charge indicators and storage slots for adapters.", "specs": ["Vertical stand with built-in cooling fan", "Charges 2 controllers in about 3 hours", "LED charging status lights", "Extra USB ports + adapter storage"], "opts": [], "img": "ps5-stand-1.jpg", "b": "Black Friday"}, {"id": "gloves", "t": "Fingerless Compression Gaming Gloves", "c": "accessories", "p": 19.99, "cmp": null, "gal": ["gloves-1.jpg"], "d": "Lightweight fingerless compression gloves that keep your hands warm and snug on long sessions, with open fingertips so every button press stays precise.", "specs": ["Fingerless for full button control", "Snug compression fit", "Breathable stretch fabric", "Sizes S\u2013XL"], "opts": ["S", "M", "L", "XL"], "img": "gloves-1.jpg", "b": "New"}, {"id": "sound-bar", "t": "RGB Music Sync Light Bar", "c": "lighting", "p": 24.99, "cmp": 29.99, "gal": ["sound-bar-1.jpg", "sound-bar-2.jpg", "sound-bar-3.jpg"], "d": "A 32-LED light bar that dances to your game audio and music. Stand it beside your monitor or lay it flat under the screen.", "specs": ["32 RGB LEDs", "Reacts to sound and music", "App control", "USB rechargeable"], "opts": ["Black", "White"], "img": "sound-bar-1.jpg", "b": "Black Friday"}, {"id": "sunset-lamp", "t": "Sunset Projection Lamp \u2014 16 Colors", "c": "lighting", "p": 49.99, "cmp": null, "gal": ["sunset-lamp-1.jpg", "sunset-lamp-2.jpg"], "d": "Throws a glowing sunset across your wall in 16 colors, from golden hour to rainbow. Rotate the head to aim it anywhere.", "specs": ["16 static and dynamic colors", "Rotating projection head", "USB powered", "Ships from the US (allow up to 2\u20133 weeks)"], "opts": [], "img": "sunset-lamp-1.jpg", "b": "New"}, {"id": "poster-cheat-codes", "t": "Cheat Codes Poster \u2014 ViceMode Edition", "c": "posters", "p": 29.99, "cmp": null, "gal": ["poster-cheat-codes-1.jpg", "poster-cheat-codes-2.jpg", "poster-cheat-codes-3.jpg"], "d": "Our original 20-code cheat sheet, printed on premium matte poster paper. Max Vibes, Golden Hour Forever, Rage-Quit Immunity and more. Purely for fun: these are ViceMode originals and don\u2019t work in any game.", "specs": ["ViceMode original design", "Premium matte paper", "Printed on demand in the US", "Frame not included"], "opts": ["12\u00d716", "18\u00d724"], "img": "poster-cheat-codes-1.jpg", "b": "New"}];
+const CATS={shop:["Shop all","Everything in the ViceMode store."],sale:["Black Friday Sale","Real markdowns on chairs, desks, lighting and gear. Ends Cyber Monday."],battle:["Battle Stations","Gaming chairs, recliners and LED desks for long sessions."],lighting:["Lighting","Floor lamps, neon, LED strips and projectors that set the mood."],accessories:["Accessories","Controller chargers, stands and gear for gamers."],tech:["Audio & Tech","Speakers, chargers and streaming gear for your space."],posters:["Posters","Original ViceMode prints for your wall."]};
+const COLS={"launch-week":{n:"Launch Week",d:"Seats, glow and gear for the biggest game drop of the year.",img:"chair-life-1.jpg",ids:["respawn-900","pink-chair","ps5-stand","led-strip-kit","sound-bar","gloves","poster-cheat-codes","corner-lamp"]},
+"neon-nights":{n:"Neon Nights",d:"Every light in the store. Turn any room into the after-hours setup.",img:"corner-lamp-1.jpg",ids:null,cat:"lighting"},
+"pink-setup":{n:"The Pink Setup",d:"Soft pink glow, top to bottom.",img:"pink-chair-1.jpg",ids:["pink-chair","flamingo-neon","drum-speaker","sunset-lamp","led-strip-kit","corner-lamp"]},
+"streamer-starter":{n:"Streamer Starter",d:"Look good and sound good on stream.",img:"halo-light-1.jpg",ids:["mic","halo-light","sound-bar","led-desk-48","arc-lamp-rgb","white-gaming-chair"]},
+"under-50":{n:"Under $50",d:"Easy upgrades and gifts under fifty bucks.",img:"led-glow.jpg",ids:null,max:50}};
+const colItems=k=>{const c=COLS[k];return c.ids?c.ids.map(byId).filter(Boolean):P.filter(p=>c.cat?p.c==c.cat:p.p<c.max)};
+const SCENES=[{n:"The Lounge",img:"chair-life-1.jpg",dots:[[58,57,"respawn-900"],[16,33,"led-strip-kit"]],pair:["sound-bar","ps5-stand","corner-lamp"]},
+{n:"Corner Command Center",img:"l-desk-1.jpg",dots:[[47,47,"l-desk"],[86,40,"led-strip-kit"]],pair:["mic","arc-lamp-rgb","projector-rgb"]},
+{n:"Living Room Glow",img:"corner-lamp-rgb-1.jpg",dots:[[51,38,"corner-lamp-rgb"],[89,46,"corner-lamp-rgb"],[70,66,"led-strip-kit"]],pair:["flamingo-neon","sunset-lamp","drum-speaker"]},
+{n:"Desk Glow-Up",img:"led-desk-48-1.jpg",dots:[[63,47,"led-desk-48"],[44,31,"sound-bar"]],pair:["white-gaming-chair","charger-stand","gloves"]}];
+const CIMG={battle:"cat-battle.jpg",lighting:"neon-studio.jpg",accessories:"cat-accessories.jpg",tech:"cat-tech.jpg",posters:"poster-cheat-codes-1.jpg"};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const money=n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});const byId=id=>P.find(p=>p.id==id);
+const oPrice=(p,o)=>{const m=/\+\$(\d+)/.exec(o||"");return p.p+(m?+m[1]:0)};const oName=o=>(o||"").replace(/ \+\$\d+/,"");
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let cart=store.get("vm_cart2",[]).filter(i=>P.some(p=>p.id==i.id)),recent=store.get("vm_recent",[]).filter(id=>P.some(p=>p.id==id));
+const FREE=75;
+$("#tick").innerHTML=Array(2).fill(["Black Friday: up to 33% off","Ends Cyber Monday 11/30","Free shipping over $75","Ships from the US","30-day returns"].map(t=>`<span>${t}</span><span>✦</span>`).join("")).join("");
+function tag(p){if(p.cmp)return `<span class="tag tag--bf">-${Math.round(100-100*p.p/p.cmp)}%</span>`;if(!p.b)return"";const c=(p.b=="New drop"||p.b=="New")?" tag--new":p.b=="Limited"?" tag--lim":"";const t=p.b=="Sale"&&p.cmp?`-${Math.round(100-100*p.p/p.cmp)}%`:p.b;return `<span class="tag${c}">${t}</span>`}
+function priceH(p,o){const v=oPrice(p,o);return `${money(v)}${p.cmp?`<s>${money(p.cmp+(v-p.p))}</s>`:""}`}
+function card(p){const alt=p.gal[1]?`<img class="alt" src="${p.gal[1]}" alt="" loading="lazy">`:"";
+return `<article class="card"><a class="card__m" href="#p-${p.id}"><img src="${p.img}" alt="${p.t}" loading="lazy">${alt}${tag(p)}</a><button class="qv" data-qv="${p.id}">Quick view</button>
+<div class="card__b"><span class="card__k">${CATS[p.c][0]}</span><a class="card__t" href="#p-${p.id}">${p.t}</a><div class="card__f"><span class="price">${priceH(p)}</span><button class="add" data-add="${p.id}" aria-label="Add ${p.t} to cart">+</button></div></div></article>`}
+// mega menu + categories
+$("#mega").innerHTML=["battle","lighting","accessories","tech"].map(c=>`<div><h5>${CATS[c][0]}</h5><ul>${P.filter(p=>p.c==c).map(p=>`<li><a href="#p-${p.id}">${p.t}</a></li>`).join("")}<li><a href="#${c}" style="color:var(--pink)">Shop all →</a></li></ul></div>`).join("")+`<a class="mega__promo" href="#sale"><img src="corner-lamp-1.jpg" alt=""><div><p class="eyebrow">Black Friday</p><b style="font:900 20px var(--fh);text-transform:uppercase">Up to 33% off</b></div></a>`;
+$("#cats").innerHTML=["battle","lighting","accessories","tech","posters"].map(c=>`<a class="cat" href="#${c}"><img src="${CIMG[c]}" alt="" loading="lazy"><div class="cat__l"><div><b>${CATS[c][0]}</b><small>${P.filter(p=>p.c==c).length} products</small></div><i>→</i></div></a>`).join("");
+function colCard(k){const c=COLS[k],it=colItems(k);return `<a class="colc" href="#col-${k}"><img src="${c.img}" alt="" loading="lazy"><div class="colc__c"><small>${it.length} products</small><b>${c.n}</b><span>${c.d}</span></div><div class="colc__th">${it.slice(0,4).map(p=>`<img src="${p.img}" alt="">`).join("")}</div></a>`}
+const colHTML=Object.keys(COLS).map(colCard).join("");$("#colGrid").innerHTML=colHTML;$("#colGrid2").innerHTML=colHTML;
+let sceneI=0;function scene(i){sceneI=i;const S=SCENES[i];$("#sceneTabs").innerHTML=SCENES.map((x,k)=>`<button class="tab${k==i?" on":""}" data-sc="${k}">${x.n}</button>`).join("");
+$("#scene").innerHTML=`<img src="${S.img}" alt="${S.n}">`+S.dots.map(([x,y,id],k)=>{const p=byId(id);return `<button class="dot" style="left:${x}%;top:${y}%" data-dot="${k}" aria-label="${p.t}"><i></i></button><div class="pop${x>60?" pop--l":""}${y>60?" pop--u":""}" id="pop${k}" style="left:${x}%;top:${y}%"><img src="${p.img}" alt=""><div><small>${CATS[p.c][0]}</small><b>${p.t}</b><span class="price">${priceH(p)}</span><div class="row"><button class="btn btn--p" data-add="${p.id}">Add</button><a class="btn" href="#p-${p.id}">View</a></div></div></div>`}).join("");
+const ids=[...new Set(S.dots.map(d=>d[2]))];$("#sceneList").innerHTML=`<div><p class="eyebrow">In this setup</p><div class="mini">${ids.map(byId).map(mini).join("")}</div></div><div><p class="eyebrow">Complete the look</p><div class="mini">${S.pair.map(byId).filter(Boolean).map(mini).join("")}</div></div>`;
+$$("#sceneTabs [data-sc]").forEach(b=>b.onclick=()=>scene(+b.dataset.sc));
+$$("#scene .dot").forEach(d=>d.onclick=e=>{e.stopPropagation();const k=d.dataset.dot,on=!$("#pop"+k).classList.contains("on");$$("#scene .pop").forEach(p=>p.classList.remove("on"));$$("#scene .dot").forEach(x=>x.classList.remove("on"));if(on){$("#pop"+k).classList.add("on");d.classList.add("on")}})}
+function mini(p){return `<a class="mi" href="#p-${p.id}"><img src="${p.img}" alt=""><div><b>${p.t}</b><span class="price">${priceH(p)}</span></div><button class="add" data-add="${p.id}" aria-label="Add">+</button></a>`}
+document.addEventListener("click",e=>{if(!e.target.closest(".pop,.dot"))$$("#scene .pop.on,#scene .dot.on").forEach(x=>x.classList.remove("on"))});
+scene(0);
+function tabGrid(t){const f=t=="sale"?p=>!!p.cmp:p=>p.c==t;$("#homeGrid").innerHTML=P.filter(f).slice(0,8).map(card).join("")}
+$$("#tabs .tab").forEach(b=>b.onclick=()=>{$$("#tabs .tab").forEach(x=>x.classList.toggle("on",x==b));tabGrid(b.dataset.t)});tabGrid("sale");
+// hero slider
+let si=0;const slides=$$(".slide");$("#dots").innerHTML=slides.map((_,i)=>`<button aria-label="Slide ${i+1}" data-s="${i}" class="${i?"":"on"}"></button>`).join("");
+function go(i){si=(i+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle("on",k==si));$$("#dots button").forEach((d,k)=>d.classList.toggle("on",k==si))}
+$$("#dots button").forEach(d=>d.onclick=()=>{go(+d.dataset.s);reset()});$("#prev").onclick=()=>{go(si-1);reset()};$("#next").onclick=()=>{go(si+1);reset()};
+let timer;const reset=()=>{clearInterval(timer);timer=setInterval(()=>go(si+1),6000)};reset();
+// cart
+function save(){store.set("vm_cart2",cart)}
+function sub(){return cart.reduce((a,it)=>a+oPrice(byId(it.id),it.opt)*it.q,0)}
+function toast(t){const e=$("#toast");e.innerHTML=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1800)}
+function add(id,opt,q=1,open=true){const p=byId(id);opt=opt??(p.opts[0]||"");const it=cart.find(x=>x.id==id&&x.opt==opt);it?it.q+=q:cart.push({id,opt,q});save();renderCart();toast(`✓ ${p.t} added`);if(open)openDrawer(true)}
+function fsH(){const s=sub(),left=Math.max(0,FREE-s);return `${left>0?`You're <b>${money(left)}</b> away from free shipping`:`<b style="color:var(--ok)">You've unlocked free shipping!</b>`}<div class="fs__bar"><i style="width:${Math.min(100,s/FREE*100)}%"></i></div>`}
+function lineH(it,k){const p=byId(it.id);return `<div class="ci"><a href="#p-${p.id}"><img src="${p.img}" alt=""></a><div><b style="font-size:14px">${p.t}</b><br><small>${oName(it.opt)}</small><div class="step"><button data-dec="${k}">−</button><span>${it.q}</span><button data-inc="${k}">+</button></div></div><div style="text-align:right"><b>${money(oPrice(p,it.opt)*it.q)}</b><br><button data-rm="${k}" style="color:var(--pink);font-size:12px;margin-top:8px">Remove</button></div></div>`}
+function renderCart(){$("#cnt").textContent=cart.reduce((a,b)=>a+b.q,0);$("#fs").innerHTML=fsH();$("#dItems").innerHTML=cart.length?cart.map(lineH).join(""):'<p class="empty">Your cart is empty.</p>';$("#dSub").textContent=money(sub());if(location.hash=="#cart")cartPage()}
+function openDrawer(o){$("#drawer").classList.toggle("on",o);$("#scrim").classList.toggle("on",o||$("#modal").classList.contains("on"))}
+function cartPage(){const s=sub(),ship=s>=FREE||!s?0:7.95;$("#v-cart").innerHTML=`<div class="wrap" style="padding-bottom:90px"><div class="ph"><p class="crumb"><a href="#home">Home</a> / Cart</p><h1 class="h2">Your <span class="grad">cart</span></h1></div>`+(cart.length?`<div class="pdp" style="grid-template-columns:1.4fr 1fr;padding:0"><div>${cart.map(lineH).join("")}</div><div style="border:1px solid var(--line);border-radius:20px;padding:28px;display:grid;gap:14px;align-self:start;background:var(--bg2)"><div class="fs" style="padding:0;border:0">${fsH()}</div><div style="display:flex;justify-content:space-between"><span>Subtotal</span><b>${money(s)}</b></div><div style="display:flex;justify-content:space-between;color:var(--muted)"><span>Shipping</span><span>${ship?money(ship):"Free"}</span></div><div style="display:flex;justify-content:space-between;font-size:22px;border-top:1px solid var(--line);padding-top:14px"><span>Total</span><b>${money(s+ship)}</b></div><button class="btn btn--p btn--block" data-checkout>Checkout</button><small style="color:var(--muted);text-align:center">Secure checkout runs on Shopify when the store is live.</small></div></div>`:`<p class="empty">Your cart is empty.</p><a class="btn btn--w" href="#shop">Start shopping</a>`)+`</div>`}
+// quick view
+function qv(id){const p=byId(id);let opt=p.opts[0]||"";const m=$("#modal");const draw=()=>{m.innerHTML=`<button class="x" id="mx">✕</button><div class="modal__in"><img src="${p.img}" alt="${p.t}"><div class="modal__c"><span class="card__k">${CATS[p.c][0]}</span><h3 style="font:900 28px/1.05 var(--fh);text-transform:uppercase">${p.t}</h3><span class="price" style="font-size:24px">${priceH(p,opt)}</span><p style="color:var(--muted)">${p.d}</p>${p.opts.length?`<div class="opts">${p.opts.map(o=>`<button class="opt${o==opt?" on":""}" data-o="${o}">${oName(o)}</button>`).join("")}</div>`:""}<button class="btn btn--p btn--block" id="mAdd">Add to cart</button><a class="lnk" style="width:max-content" href="#p-${p.id}">View full details</a></div></div>`;
+m.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{opt=b.dataset.o;draw()});$("#mAdd").onclick=()=>{closeModal();add(p.id,opt)};$("#mx").onclick=closeModal};draw();m.classList.add("on");$("#scrim").classList.add("on")}
+function closeModal(){$("#modal").classList.remove("on");if(!$("#drawer").classList.contains("on"))$("#scrim").classList.remove("on")}
+// shop
+let shopCat="shop";
+function shop(c){shopCat=c;const D=CATS[c]||[COLS[c.slice(4)].n,COLS[c.slice(4)].d];$("#shopT").textContent=D[0];$("#shopD").textContent=D[1];$("#shopCrumb").textContent=D[0];
+$("#fCat").innerHTML=Object.keys(CATS).map(k=>`<label class="chk"><input type="radio" name="fc" value="${k}" ${k==c?"checked":""}> ${CATS[k][0]}<em>${k=="shop"?P.length:k=="sale"?P.filter(p=>p.cmp).length:P.filter(p=>p.c==k).length}</em></label>`).join("");
+$$('#fCat input').forEach(i=>i.onchange=()=>location.hash=i.value);filt()}
+function filt(){const max=+$("#fPrice").value;$("#fPv").textContent="Up to $"+max;const inCol=shopCat.startsWith("col-")?colItems(shopCat.slice(4)).map(p=>p.id):null;let L=P.filter(p=>(shopCat=="shop"||(shopCat=="sale"&&p.cmp)||p.c==shopCat||(inCol&&inCol.includes(p.id)))&&p.p<=max&&(!$("#fSale").checked||p.cmp));
+const s=$("#sort").value;if(s=="lo")L.sort((a,b)=>a.p-b.p);if(s=="hi")L.sort((a,b)=>b.p-a.p);if(s=="az")L.sort((a,b)=>a.t.localeCompare(b.t));
+$("#shopN").textContent=L.length+" products";$("#shopGrid").innerHTML=L.length?L.map(card).join(""):'<p class="empty">No products match those filters.</p>'}
+["#fPrice","#fSale","#sort"].forEach(s=>$(s).addEventListener("input",filt));
+// product
+function product(p){recent=[p.id,...recent.filter(x=>x!=p.id)].slice(0,8);store.set("vm_recent",recent);
+let opt=p.opts[0]||"",q=1,img=0;const v=$("#v-product");
+const draw=()=>{v.innerHTML=`<div class="wrap"><div class="ph" style="border:0;padding-bottom:10px;margin:0"><p class="crumb"><a href="#home">Home</a> / <a href="#${p.c}">${CATS[p.c][0]}</a> / ${p.t}</p></div>
+<div class="pdp"><div class="gal"><div class="thumbs">${p.gal.map((g,i)=>`<button class="th${i==img?" on":""}" data-i="${i}"><img src="${g}" alt=""></button>`).join("")}</div><div class="gal__main"><img src="${p.gal[img]}" alt="${p.t}"></div></div>
+<div class="info"><div style="display:flex;gap:10px;align-items:center"><span class="card__k">${CATS[p.c][0]}</span>${p.b?`<span class="tag" style="position:static">${p.b}</span>`:""}</div><h1>${p.t}</h1>
+<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span class="price">${priceH(p,opt)}</span>${p.cmp?`<span class="tag" style="position:static">Save ${money(p.cmp-p.p)}</span>`:""}</div>
+<div class="stock"><i></i>In stock — ships from the US</div>
+<p style="color:#d0c8e2">${p.d}</p>
+${p.opts.length?`<div><p class="card__k" style="margin-bottom:12px">Choose option: <b style="color:#fff">${oName(opt)}</b></p><div class="opts">${p.opts.map(o=>`<button class="opt${o==opt?" on":""}" data-o="${o}">${oName(o)}</button>`).join("")}</div></div>`:""}
+<div class="row" id="atcRow"><div class="step"><button data-q="-1">−</button><span>${q}</span><button data-q="1">+</button></div><button class="btn btn--p" style="flex:1" id="pAdd">Add to cart — ${money(oPrice(p,opt)*q)}</button></div>
+<div class="ship"><div>🚚 Free shipping over $75</div><div>↺ 30-day returns</div><div>🔒 Secure checkout</div><div>📦 Tracked delivery</div></div>
+<div class="acc"><details open><summary>Features</summary><div class="ac"><ul>${p.specs.map(s=>`<li>${s}</li>`).join("")}</ul></div></details><details><summary>Shipping &amp; returns</summary><div class="ac">Orders ship from US warehouses with tracking. Free US shipping on orders over $75. Returns accepted within 30 days in original condition.</div></details><details><summary>Care</summary><div class="ac">Wipe clean with a dry cloth. Keep electronics away from water.</div></details></div>
+</div></div>
+<div class="sec__h"><div><p class="eyebrow">Complete the setup</p><h2 class="h2" style="margin-top:12px">You may also <span class="grad">like</span></h2></div></div>
+<div class="grid" style="padding-bottom:90px">${P.filter(x=>x.id!=p.id).sort((a,b)=>(b.c==p.c)-(a.c==p.c)).slice(0,4).map(card).join("")}</div></div>`;
+v.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{opt=b.dataset.o;draw()});v.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{q=Math.max(1,q+ +b.dataset.q);draw()});
+v.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{img=+b.dataset.i;draw()});$("#pAdd").onclick=()=>add(p.id,opt,q);
+$("#satc").innerHTML=`<div class="wrap"><img src="${p.img}" alt=""><div class="grow"><b>${p.t}</b><br><span style="color:var(--muted);font-size:13px">${oName(opt)}</span></div><span class="price">${money(oPrice(p,opt))}</span><button class="btn btn--p" id="sAdd">Add to cart</button></div>`;$("#sAdd").onclick=()=>add(p.id,opt,q)};draw()}
+addEventListener("scroll",()=>{const r=$("#atcRow");$("#satc").classList.toggle("show",!!r&&!$("#v-product").hidden&&r.getBoundingClientRect().bottom<0)},{passive:true});
+// search
+function openSearch(o){$("#search").classList.toggle("on",o);if(o){$("#sIn").focus();sres()}}
+function sres(){const q=$("#sIn").value.toLowerCase().trim();const L=P.filter(p=>!q||(p.t+" "+p.c+" "+p.d).toLowerCase().includes(q)).slice(0,5);$("#sRes").innerHTML=L.length?L.map(p=>`<a href="#p-${p.id}"><img src="${p.img}" alt=""><span>${p.t}</span><b>${money(p.p)}</b></a>`).join(""):'<p class="empty">No matches.</p>'}
+$("#sBtn").onclick=()=>openSearch(!$("#search").classList.contains("on"));$("#sIn").oninput=sres;
+// router
+function route(){const h=location.hash.slice(1)||"home";let v="home";
+if(CATS[h]||(h.startsWith("col-")&&COLS[h.slice(4)])){v="shop";shop(h)}else if(h=="collections"){v="collections"}else if(h.startsWith("p-")&&byId(h.slice(2))){v="product";product(byId(h.slice(2)))}else if(h=="cart"){v="cart";cartPage()}else if(h=="about"){v="about"}
+else if(h=="join"){setTimeout(()=>$("#joinSec").scrollIntoView({behavior:"smooth"}),30)}
+$$(".view").forEach(x=>x.hidden=x.id!="v-"+v);openDrawer(false);closeModal();openSearch(false);$("#nav").classList.remove("open");$("#satc").classList.remove("show");
+if(v=="home"){const r=recent.map(byId).filter(Boolean).slice(0,4);$("#rvSec").hidden=!r.length;$("#rvGrid").innerHTML=r.map(card).join("")}
+if(h!="join")scrollTo(0,0)}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-add],[data-qv],[data-rm],[data-inc],[data-dec],[data-checkout]");if(!t)return;
+if(t.dataset.add){e.preventDefault();add(t.dataset.add)}if(t.dataset.qv){e.preventDefault();qv(t.dataset.qv)}
+if(t.dataset.rm){cart.splice(+t.dataset.rm,1);save();renderCart()}if(t.dataset.inc){cart[+t.dataset.inc].q++;save();renderCart()}
+if(t.dataset.dec){const k=+t.dataset.dec;if(!--cart[k].q)cart.splice(k,1);save();renderCart()}
+if("checkout" in t.dataset)toast("Checkout opens on Shopify once the store is live")});
+$("#cBtn").onclick=()=>openDrawer(true);$("#dClose").onclick=()=>openDrawer(false);$("#scrim").onclick=()=>{openDrawer(false);closeModal()};
+$("#burger").onclick=()=>$("#nav").classList.toggle("open");
+addEventListener("keydown",e=>{if(e.key=="Escape"){openDrawer(false);closeModal();openSearch(false)}});
+$("#nf").onsubmit=e=>{e.preventDefault();e.target.innerHTML='<p style="color:var(--ok);font-weight:600">You\'re in. Check your inbox for 10% off.</p>'};
+$$("[data-cd]").forEach(el=>{const end=new Date(el.dataset.cd).getTime();const tk=()=>{let d=Math.max(0,end-Date.now());const u=[864e5,36e5,6e4,1e3];el.querySelectorAll("b").forEach((b,i)=>{b.textContent=String(Math.floor(d/u[i])).padStart(2,"0");d%=u[i]})};tk();setInterval(tk,1000)});
+addEventListener("hashchange",route);renderCart();route();
+</script></body></html>
